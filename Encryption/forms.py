@@ -22,8 +22,8 @@ CRYPT_ALGO_CHOICES = (
 class EnCryptForm(forms.Form):
     text = forms.CharField(required=False, widget=forms.Textarea(attrs={"class": "text",
                                                                         "placeholder": "Текст или файл"}))
-    key = forms.CharField(max_length=100, widget=forms.TextInput(attrs={"class": "key",
-                                                                        "placeholder": "🔑"}))
+    key = forms.CharField(widget=forms.Textarea(attrs={"class": "key",
+                                                        "placeholder": "🔑"}))
     action = forms.ChoiceField(widget=forms.RadioSelect(attrs={"class": "action"}), choices=CRYPT_CHOICES)
     algorithm = forms.ChoiceField(widget=forms.Select(attrs={"class": "algorithm"}), choices=CRYPT_ALGO_CHOICES)
     file = forms.FileField(required=False)

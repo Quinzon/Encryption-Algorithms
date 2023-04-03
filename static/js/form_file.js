@@ -4,6 +4,16 @@ $(document).ready(function() {
 		$('.clear-btn').css('display', 'none');
         $('.copy-btn').css('display', 'none');
 	}
+    if($(".text").text() == "") {
+        $('.text-delete-btn').css('display', 'none');
+	}
+    $('.text').on('input', function() {
+        if ($(this).val().length > 0) {
+            $('.text-delete-btn').show();
+        } else {
+            $('.text-delete-btn').hide();
+        }
+    });
 
 
 	if ($('#id_action_0').is(':checked')) {
@@ -36,8 +46,7 @@ $(document).ready(function() {
         const _this = $(this),
             selectOption = _this.find('option'),
             selectOptionLength = selectOption.length,
-            selectedOption = selectOption.filter(':selected'),
-            duration = 450; // длительность анимации
+            duration = 450;
 
         _this.hide();
         _this.wrap('<div class="algorithm"></div>');
@@ -92,6 +101,12 @@ $(document).ready(function() {
     });
 
 
+    $('.text-delete-btn').on('click', function() {
+        $('.text').val('');
+        $(this).hide();
+    });
+
+
     $(document).on("click",".copy-btn",function() {
     var el = '.result-text'
         var $tmp = $("<textarea>");
@@ -100,4 +115,77 @@ $(document).ready(function() {
         document.execCommand("copy");
         $tmp.remove();
     })
+
+
+    function matchWidth() {
+        var inputFileWidth = $('.input-file label').outerWidth();
+        $('.generate-btn').outerWidth(inputFileWidth);
+    }
+    matchWidth();
+    $(window).on('resize', function() {
+        matchWidth();
+    });
+    $('.input-file input[type=file]').on('change', function(){
+        matchWidth();
+	});
+
+
+    function checkSelectedGamming() {
+        var textarea = $('.text');
+        if ($('.algorithm option:selected').val() === 'gamming') {
+            textarea.attr("readonly", true);
+            textarea.data('hidden-text', textarea.val());
+            textarea.val('');
+            textarea.attr('placeholder', 'Только файл');
+        }
+    }
+
+    function checkSelectedRSA() {
+        if ($('.algorithm option:selected').val() === 'RSA') {
+            $('.generate-rsa-area').show();
+            $('.key').attr("placeholder", "🔑PEM");
+        }
+    }
+
+    function checkSelectedDiffie_Hellman() {
+        var textarea = $('.text');
+        if ($('.algorithm option:selected').val() === 'Diffie-Hellman') {
+            $('.generate-diffie_hellman-area').show();
+            $('.submit-post').attr('disabled', true);
+            textarea.attr('readonly', true);
+            textarea.data('hidden-text', textarea.val());
+            textarea.val('');
+            textarea.attr('placeholder', 'Только генерация ключа');
+        }
+    }
+
+    function checkSelectedStandard() {
+        var textarea = $('.text');
+        var hiddenText = textarea.data('hidden-text');
+        $('.generate-rsa-area').hide();
+        $('.generate-diffie_hellman-area').hide();
+        $('.key').attr("placeholder", "🔑");
+        $('.submit-post').attr('disabled', false);
+        textarea.attr("readonly", false);
+        textarea.val(hiddenText);
+        textarea.removeData('hidden-text');
+        textarea.attr('placeholder', 'Текст или файл');
+    }
+
+    checkSelectedStandard()
+    $(document).on('click', '.new-select__item', function() {
+        if ($('.algorithm option:selected').val() === 'gamming') {
+            setTimeout(checkSelectedStandard, 225);
+            setTimeout(checkSelectedGamming, 225);
+        } else if ($('.algorithm option:selected').val() === 'RSA') {
+            setTimeout(checkSelectedStandard, 225);
+            setTimeout(checkSelectedRSA, 225);
+        } else if ($('.algorithm option:selected').val() === 'Diffie-Hellman') {
+            setTimeout(checkSelectedStandard, 225);
+            setTimeout(checkSelectedDiffie_Hellman, 225);
+        } else {
+            setTimeout(checkSelectedStandard, 450);
+        }
+    });
+
 });
