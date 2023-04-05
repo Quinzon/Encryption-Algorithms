@@ -130,62 +130,45 @@ $(document).ready(function() {
 	});
 
 
-    function checkSelectedGamming() {
+    function handleAlgorithmChange() {
         var textarea = $('.text');
-        if ($('.algorithm option:selected').val() === 'gamming') {
+        var hiddenText = textarea.data('hidden-text');
+        var algorithm = $('.algorithm option:selected').val();
+
+        $('.generate-rsa-area, .generate-diffie_hellman-area').hide();
+        $('.submit-post').attr('disabled', false);
+        textarea.attr("readonly", false).attr('placeholder', 'Текст или файл');
+
+        if (hiddenText) {
+            textarea.val(hiddenText);
+            textarea.removeData('hidden-text');
+        }
+
+        if (algorithm === 'gamming') {
             textarea.attr("readonly", true);
             textarea.data('hidden-text', textarea.val());
             textarea.val('');
             textarea.attr('placeholder', 'Только файл');
-        }
-    }
 
-    function checkSelectedRSA() {
-        if ($('.algorithm option:selected').val() === 'RSA') {
+        } else if (algorithm === 'RSA') {
             $('.generate-rsa-area').show();
             $('.key').attr("placeholder", "🔑PEM");
-        }
-    }
 
-    function checkSelectedDiffie_Hellman() {
-        var textarea = $('.text');
-        if ($('.algorithm option:selected').val() === 'Diffie-Hellman') {
+        } else if (algorithm === 'Diffie-Hellman') {
             $('.generate-diffie_hellman-area').show();
             $('.submit-post').attr('disabled', true);
             textarea.attr('readonly', true);
             textarea.data('hidden-text', textarea.val());
             textarea.val('');
             textarea.attr('placeholder', 'Только генерация ключа');
-        }
-    }
-
-    function checkSelectedStandard() {
-        var textarea = $('.text');
-        var hiddenText = textarea.data('hidden-text');
-        $('.generate-rsa-area').hide();
-        $('.generate-diffie_hellman-area').hide();
-        $('.key').attr("placeholder", "🔑");
-        $('.submit-post').attr('disabled', false);
-        textarea.attr("readonly", false);
-        textarea.val(hiddenText);
-        textarea.removeData('hidden-text');
-        textarea.attr('placeholder', 'Текст или файл');
-    }
-
-    checkSelectedStandard()
-    $(document).on('click', '.new-select__item', function() {
-        if ($('.algorithm option:selected').val() === 'gamming') {
-            setTimeout(checkSelectedStandard, 225);
-            setTimeout(checkSelectedGamming, 225);
-        } else if ($('.algorithm option:selected').val() === 'RSA') {
-            setTimeout(checkSelectedStandard, 225);
-            setTimeout(checkSelectedRSA, 225);
-        } else if ($('.algorithm option:selected').val() === 'Diffie-Hellman') {
-            setTimeout(checkSelectedStandard, 225);
-            setTimeout(checkSelectedDiffie_Hellman, 225);
         } else {
-            setTimeout(checkSelectedStandard, 450);
+            $('.key').attr("placeholder", "🔑");
         }
+    }
+
+    handleAlgorithmChange();
+    $(document).on('click', '.new-select__item', function() {
+        setTimeout(handleAlgorithmChange, 225);
     });
 
 });
