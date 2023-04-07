@@ -25,7 +25,7 @@ class Crypt:
     @staticmethod
     def handle_file(file, algorithm):
         if file:
-            if algorithm in ['caesar', 'permutation', 'polybius', 'playfair']:
+            if re.search(r'\.[^.\\/:*?"<>|\r\n]+$', str(file))[0] == '.txt' and algorithm not in ["gamming", "RSA"]:
                 with open(f'media/result_file/{file}', 'wb+'):
                     result = ''.join([chunk.decode('UTF-8') for chunk in file.chunks()])
                     return result
@@ -75,6 +75,8 @@ class Crypt:
         return result
 
     def crypt(self, data, key, algorithm, action):
+        if algorithm in ['caesar', 'permutation', 'polybius', 'playfair'] and not isinstance(data, str):
+            return 'Только текстовый файл!'
         if algorithm == 'caesar':
             return self._caesar_cipher(data, key, action)
         elif algorithm == 'permutation':

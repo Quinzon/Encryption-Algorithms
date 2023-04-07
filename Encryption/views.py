@@ -3,7 +3,6 @@ from .forms import EnCryptForm
 from .cryptoalgorithms import Crypt, GenerateKey
 from django.utils.encoding import filepath_to_uri
 from django.http import JsonResponse
-import random
 
 
 def generate_rsa(request):
