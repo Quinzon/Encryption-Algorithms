@@ -1,0 +1,5 @@
+Django~=4.2
+cryptography==39.0.1
+chardet==4.0.0
+PyCryptodome
+pathlib~=1.0.1
